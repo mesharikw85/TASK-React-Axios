@@ -29,8 +29,8 @@ const getPetByid = async (id) => {
   return res.data;
 };
 
-const deletePet = async () => {
-  const pet = await instance.delete("pets");
+const deletePet = async (id) => {
+  const pet = await instance.delete(`pets/${id}`);
   return pet;
 };
 

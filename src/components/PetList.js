@@ -1,26 +1,37 @@
 import React, { useState, useEffect } from "react";
-// import petsData from "../petsData";
+import petsData from "../petsData";
 import PetItem from "./PetItem";
 import Modal from "./Modal";
 import { getpets } from "../api/pets";
+import { useQuery } from "@tanstack/react-query";
 
 const PetList = () => {
   const [query, setQuery] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [pets, setPets] = useState([]);
-  // const pets = getpets;
+  // // const pets = getpets;
 
-  const getpet = async () => {
-    const res = await getpets();
-    setPets(res.data);
-  };
-  useEffect(() => {
-    getpet();
-  }, []);
+  // const getpet = async () => {
+  //   const res = await getpets();
+  //   setPets(res.data);
+  // };
+  // useEffect(() => {
+  //   getpet();
+  // }, []);
 
-  const petList = pets
-    .filter((pet) => pet.name.toLowerCase().includes(query.toLowerCase()))
-    .map((pet) => <PetItem pet={pet} key={pet.id} />);
+  const { data, isLoading } = useQuery({
+    queryKey: ["pets"],
+    queryFn: () => getpets(),
+  });
+  console.log(data);
+
+  const petList = data?.data?.map((pet) => <h1 Key={pet.id}>{pet.name} </h1>);
+  if (isLoading) return <h1>Laoding...</h1>;
+  return <div>{petList}</div>;
+
+  // const petList = pets
+  //   .filter((pet) => pet.name.toLowerCase().includes(query.toLowerCase()))
+  //   .map((pet) => <PetItem pet={pet} key={pet.id} />);
 
   return (
     <>
@@ -43,7 +54,7 @@ const PetList = () => {
           </button>
         </div>
         <div className=" flex flex-col flex-wrap md:flex-row gap-[20px] w-[76vw]  justify-center items-center mb-[50px]">
-          {petList}
+          {/* {petList} */}
         </div>
       </div>
       <Modal show={showModal} setShowModal={setShowModal} />
